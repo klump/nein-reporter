@@ -50,7 +50,7 @@ class Report
     def determine_asset_id
       dmidecode = `sudo dmidecode --type 1`
       dmidecode.each_line do |line|
-        line =~ /^\s+Serial\sNumber:\s+(\w+)$/
+        return $1 if line =~ /^\s+Serial\sNumber:\s+(\w+)$/
       end
     end
 
