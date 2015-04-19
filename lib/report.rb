@@ -60,7 +60,7 @@ class Report
     # Update the report in the inventory
     #
     def update
-      puts "PUT /reports/{ID}"
+      puts "PUT /reports/#{@id}"
       puts summarize
     end
 

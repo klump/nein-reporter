@@ -26,7 +26,7 @@ class Asset
     @@collectors[@type].each do |collector|
       c = collector.new
       c.run
-      @report.add collector::NAME, c.run
+      @report.add collector::NAME, c.report
     end
 
     # End the report and return the results
