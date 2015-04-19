@@ -12,12 +12,12 @@ class Report
     @data = {}
     @starttime = Time.now
     @endtime = nil
-    @status = :unknown
+    @status = nil
 
     # Set the asset ID
     if ( asset_id.nil? )
       # If no asset ID was found, fail the report and add an error message
-      @status = :critical
+      @status = "fail"
       add "report", { "error" => "Could not find a valid ID for the asset" }
     else
       @asset_id = asset_id
@@ -36,27 +36,30 @@ class Report
   end
 
   #
-  # Consider the report as finished
+  # Consider the report as successful finished
   # Set endtime and submit all information to the inventory server
   #
   def finalize
+    @status = "pass"
     @endtime = Time.now
 
     update
   end
 
   #
-  # Pack up all instance variables as a hash
+  # Generate a JSON object as expected by the NEIN API
   #
-  def to_hash
-    {
-      id: @id,
-      asset_id: @asset_id,
-      data: @data,
-      starttime: @starttime,
-      endtime: @endtime,
-      status: @status
-    }
+  def to_json
+    ({
+      report: {
+        id: @id,
+        asset_id: @asset_id,
+        data: @data,
+        starttime: @starttime,
+        endtime: @endtime,
+        status: @status
+      }
+    }).to_json
   end
 
   private
@@ -68,7 +71,7 @@ class Report
       puts self.to_hash
 
       # Submit the half-finished object via a post request
-      Inventory.request['reports'].post self.to_hash.to_json, :content_type => :json, :accept => :json
+      Inventory.request['reports'].post self.to_json, :content_type => :json, :accept => :json
 
       @id = (rand*100).floor
     end
@@ -81,6 +84,6 @@ class Report
       puts self.to_hash
 
       # Submit the half-finished object via a post request
-      Inventory.request["reports/#{@id}"].put self.to_hash.to_json, :content_type => :json, :accept => :json
+      Inventory.request["reports/#{@id}"].put self.to_json, :content_type => :json, :accept => :json
     end
 end
