@@ -12,7 +12,7 @@ class Report
     @data = {}
     @starttime = Time.now
     @endtime = nil
-    @status = :started
+    @status = :unknown
   end
 
   #
@@ -48,7 +48,17 @@ class Report
     # Attepmt to identify the ID of the asset
     #
     def determine_asset_id
-      `sudo dmidecode -s system-serial-number`.chomp
+      serial = `sudo dmidecode -s system-serial-number`.chomp
+
+      # Check if the serial is valid (all word characters)
+      unless ( serial =~ /^\s+$/ )
+        @status = :critical
+        @data["report"] = {
+          error: "Could not find a valid serial for the machine"
+        }
+      else
+        serial
+      end
     end
 
     def summarize

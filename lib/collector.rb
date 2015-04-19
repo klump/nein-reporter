@@ -19,7 +19,7 @@ class Collector
    @report[:starttime] = Time.now
    Open3.popen3(command) do |stdin, stdout, stderr, wait_thread|
      @report[:output] = stdout.read.chomp
-     @report[:errors] = stderr.read.chomp
+     @report[:error] = stderr.read.chomp
      @report[:exitcode] = wait_thread.value.exitstatus
    end
 
