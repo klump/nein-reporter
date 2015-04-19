@@ -48,7 +48,10 @@ class Report
     # Attepmt to identify the ID of the asset
     #
     def determine_asset_id
-      'some-computer'
+      dmidecode = `sudo dmidecode --type 1`
+      dmidecode.each_line do |line|
+        line =~ /^\s+Serial\sNumber:\s+(\w+)$/
+      end
     end
 
     def summarize
