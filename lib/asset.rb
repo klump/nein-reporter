@@ -36,12 +36,10 @@ class Asset
       return nil
     end
 
-    @@collectors[@type].keys.sort do |priority|
-      @@collectors[@type][priority].each do |collector|
-        c = collector.new
-        c.run
-        @report.add collector::NAME, c.report
-      end
+    @@collectors[@type].sort.each do |collector|
+      c = collector.new
+      c.run
+      @report.add collector::NAME, c.report
     end
 
     # End the report and return the results
