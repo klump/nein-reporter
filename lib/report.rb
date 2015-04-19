@@ -1,66 +1,72 @@
 require 'json'
 
 class Report
+  attr_accessor :asset_id, :status
+
   #
   # Create a new report
   # The attributes map to the ones of the report in the inventory
   #
-
-  def initialize
+  def initialize asset_id=nil
     @id = nil
-    @asset_id = determine_asset_id
     @data = {}
     @starttime = Time.now
     @endtime = nil
     @status = :unknown
-  end
 
-  #
-  # Create the report to the inventory to tell that we have started
-  #
-  def create
-    summarize
-  end
-
-  #
-  # Collect information
-  #
-  def collect
-    Collector.subclasses.each do |collector|
-      collector_instance = collector.new
-      collector_instance.run
-      @data[collector::NAME] = collector_instance.report
+    # Set the asset ID
+    if ( asset_id.nil? )
+      # If no asset ID was found, fail the report and add an error message
+      @status = :critical
+      add "report", { "error" => "Could not find a valid ID for the asset" }
+    else
+      @asset_id = asset_id
     end
 
-    @status = :success
-    @endtime = Time.now
+    create
+
+    return self
   end
 
   #
-  # Update the final report to the inventory
+  # Add information to the data field
   #
-  def update
-    summarize
+  def add collector, data
+    @data[collector] = data
+  end
+
+  #
+  # Consider the report as finished
+  # Set endtime and submit all information to the inventory server
+  #
+  def finalize
+    @endtime = Time.now
+
+    update
   end
 
   private
     #
-    # Attepmt to identify the ID of the asset
-    #
-    def determine_asset_id
-      serial = `sudo dmidecode -s system-serial-number`.chomp
+    # Create the report in the inventory and set the report id
+    # 
+    def create
+      puts "POST /reports"
+      puts summarize
 
-      # Check if the serial is valid (all word characters)
-      unless ( serial =~ /^\s+$/ )
-        @status = :critical
-        @data["report"] = {
-          error: "Could not find a valid serial for the machine"
-        }
-      else
-        serial
-      end
+      @id = (rand*100).floor
     end
 
+    #
+    # Update the report in the inventory
+    #
+    def update
+      puts "PUT /reports/{ID}"
+      puts summarize
+    end
+
+    #
+    # Generate a hash as expected by the inventory
+    #
     def summarize
       {
         id: @id,

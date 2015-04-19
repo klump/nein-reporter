@@ -1,8 +1,8 @@
 class Collector::Dmesg < Collector
   NAME = 'dmesg'
   
-  # Register as a subclass of Collector
-  Collector.register(self)
+  # This collector is for the computer asset type
+  Asset.add_collector(:computer, self)
 
   def initialize
     super
