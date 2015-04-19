@@ -45,16 +45,30 @@ class Report
     update
   end
 
+  #
+  # Pack up all instance variables as a hash
+  #
+  def to_hash
+    {
+      id: @id,
+      asset_id: @asset_id,
+      data: @data,
+      starttime: @starttime,
+      endtime: @endtime,
+      status: @status
+    }
+  end
+
   private
     #
     # Create the report in the inventory and set the report ID (assigned by the server)
     # 
     def create
       puts "POST /reports"
-      puts summarize
+      puts self.to_hash
 
       # Submit the half-finished object via a post request
-      Inventory.request['reports'].post summarize.to_json, :content_type => :json, :accept => :json
+      Inventory.request['reports'].post self.to_hash.to_json, :content_type => :json, :accept => :json
 
       @id = (rand*100).floor
     end
@@ -64,23 +78,9 @@ class Report
     #
     def update
       puts "PUT /reports/#{@id}"
-      puts summarize
+      puts self.to_hash
 
       # Submit the half-finished object via a post request
-      Inventory.request["reports/#{@id}"].put summarize.to_json, :content_type => :json, :accept => :json
-    end
-
-    #
-    # Generate a hash as expected by the inventory database
-    #
-    def summarize
-      {
-        id: @id,
-        asset_id: @asset_id,
-        data: @data,
-        starttime: @starttime,
-        endtime: @endtime,
-        status: @status
-      }
+      Inventory.request["reports/#{@id}"].put self.to_hash.to_json, :content_type => :json, :accept => :json
     end
 end

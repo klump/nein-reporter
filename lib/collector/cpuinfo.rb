@@ -1,4 +1,4 @@
-class Collector::Cpuinfo< Collector
+class Collector::Cpuinfo < Collector
   NAME = 'cpuinfo'
   
   # This collector is for the computer asset type
