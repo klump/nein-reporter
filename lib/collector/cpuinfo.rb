@@ -1,5 +1,5 @@
-class Collector::Dmesg < Collector
-  NAME = 'dmesg'
+class Collector::Cpuinfo< Collector
+  NAME = 'cpuinfo'
   
   # This collector is for the computer asset type
   Asset.add_collector(:computer, 10, self)
@@ -9,7 +9,7 @@ class Collector::Dmesg < Collector
   end
 
   def run
-    command = 'dmesg'
+    command = 'cat /proc/cpuinfo'
 
     super(command)
   end

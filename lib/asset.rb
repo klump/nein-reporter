@@ -4,9 +4,10 @@ class Asset
 
   @@collectors = {}
 
-  def Asset.add_collector type, collector
-    @@collectors[type] = [] if @@collectors[type].nil?
-    @@collectors[type] << collector
+  def Asset.add_collector type, priority, collector
+    @@collectors[type] = {} if @@collectors[type].nil?
+    @@collectors[type][priority] = [] if @@collectors[type][priority].nil?
+    @@collectors[type][priority] << collector
   end
 
   def initialize type
@@ -23,10 +24,12 @@ class Asset
       return nil
     end
 
-    @@collectors[@type].each do |collector|
-      c = collector.new
-      c.run
-      @report.add collector::NAME, c.report
+    @@collectors[@type].keys.sort do |priority|
+      @@collectors[@type][priority].each do |collector|
+        c = collector.new
+        c.run
+        @report.add collector::NAME, c.report
+      end
     end
 
     # End the report and return the results

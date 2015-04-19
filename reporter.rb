@@ -6,7 +6,7 @@ require_relative './lib/inventory.rb'
 require_relative './lib/collector.rb'
 
 # Connect to the Inventory API
-Inventory.connect
+Inventory.configure
 
 asset = Asset.new :computer
 asset.inventory

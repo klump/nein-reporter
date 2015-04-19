@@ -47,11 +47,14 @@ class Report
 
   private
     #
-    # Create the report in the inventory and set the report id
+    # Create the report in the inventory and set the report ID (assigned by the server)
     # 
     def create
       puts "POST /reports"
       puts summarize
+
+      # Submit the half-finished object via a post request
+      Inventory.request['reports'].post summarize.to_json, :content_type => :json, :accept => :json
 
       @id = (rand*100).floor
     end
@@ -62,10 +65,13 @@ class Report
     def update
       puts "PUT /reports/#{@id}"
       puts summarize
+
+      # Submit the half-finished object via a post request
+      Inventory.request["reports/#{@id}"].put summarize.to_json, :content_type => :json, :accept => :json
     end
 
     #
-    # Generate a hash as expected by the inventory
+    # Generate a hash as expected by the inventory database
     #
     def summarize
       {
@@ -74,7 +80,7 @@ class Report
         data: @data,
         starttime: @starttime,
         endtime: @endtime,
-        status: @status,
+        status: @status
       }
     end
 end
