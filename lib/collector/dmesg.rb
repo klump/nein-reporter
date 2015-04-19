@@ -14,7 +14,7 @@ class Collector::Dmesg < Collector
     super(command)
   end
 
-  def report
+  def to_hash
     super
   end
 end

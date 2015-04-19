@@ -1,12 +1,11 @@
 class Asset
   # Create empty arrays for every asset type
   @@collectors = {
-    :computer => [],
-    :hard_drive => []
+    :computer => {},
+    :hard_drive => {}
   }
 
   def Asset.add_collector type, priority, collector
-    @@collectors[type] = {} if @@collectors[type].nil?
     @@collectors[type][priority] = [] if @@collectors[type][priority].nil?
     @@collectors[type][priority] << collector
   end
@@ -36,10 +35,12 @@ class Asset
       return nil
     end
 
-    @@collectors[@type].sort.each do |collector|
-      c = collector.new
-      c.run
-      @report.add collector::NAME, c.report
+    @@collectors[@type].keys.sort.each do |priority|
+      @@collectors[@type][priority].each do |collector|
+        c = collector.new
+        c.run
+        @report.add collector::NAME, c.to_hash
+      end
     end
 
     # End the report and return the results
