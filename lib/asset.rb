@@ -36,7 +36,7 @@ class Asset
       return nil
     end
 
-    @@collectors[@type].keys.sort do |priority|
+    @@collectors[@type].sort do |priority|
       @@collectors[@type][priority].each do |collector|
         c = collector.new
         c.run
