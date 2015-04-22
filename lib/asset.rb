@@ -66,7 +66,7 @@ class Asset
       end
 
       # Check if the id is valid (all word characters plus dash)
-      if ( id =~ /^[A-Za-z0-9_-]+$/ )
+      if ( name =~ /^[A-Za-z0-9_-]+$/ )
         name
       else
         return
