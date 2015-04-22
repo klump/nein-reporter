@@ -31,7 +31,7 @@ class Asset
   # Run the collectors associated with the asset 
   #
   def inventory
-    @report = Report.new(get_id_from_inventory(@id))
+    @report = Report.new(@id)
     if ( @report.asset_id.nil? )
       return nil
     end
@@ -66,7 +66,7 @@ class Asset
       end
 
       # Check if the id is valid (all word characters plus dash)
-      if ( name =~ /^[A-Za-z0-9_-]+$/ )
+      if ( name =~ /^[A-Za-z1-9_-]+$/ )
         name
       else
         return
@@ -78,6 +78,11 @@ class Asset
     def fetch_id
       return unless @name
 
-      p Inventory.request["assets/#{@name}"]
+      begin
+        response = Inventory.request["assets/#{@name}"].get
+        p response
+      rescue => e
+        p e.response
+      end
     end
 end
