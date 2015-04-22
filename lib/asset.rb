@@ -66,7 +66,7 @@ class Asset
       end
 
       # Check if the id is valid (all word characters plus dash)
-      if ( name =~ /^[A-Za-z1-9_-]+$/ )
+      if ( name =~ /^[A-Za-z0-9_-]+$/ )
         name
       else
         return
@@ -80,9 +80,10 @@ class Asset
 
       begin
         response = Inventory.request["assets/#{@name}"].get
-        p response
-      rescue => e
-        p e.response
+        asset = JSON.parse(response)
+        asset["id"]
+      rescue RestClient::ResourceNotFound
+        nil
       end
     end
 end
