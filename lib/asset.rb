@@ -22,7 +22,8 @@ class Asset
       raise TypeError
     end
 
-    @id = determine_id
+    @name = determine_name
+    @id = fetch_id
     @options=options
   end
 
@@ -30,7 +31,7 @@ class Asset
   # Run the collectors associated with the asset 
   #
   def inventory
-    @report = Report.new determine_id
+    @report = Report.new(get_id_from_inventory(@id))
     if ( @report.asset_id.nil? )
       return nil
     end
@@ -49,23 +50,34 @@ class Asset
 
   private
     #
-    # Attepmt to identify the ID of the asset
+    # Determine the name of the asset
     #
-    def determine_id
-      id = nil
+    def determine_name
+      name = nil
 
       case @type
-      when :computer
-        id = `sudo dmidecode -s system-serial-number`.chomp
-
-        # Check if the id is valid (all word characters plus dash)
-        return nil unless ( id =~ /^[A-Za-z0-9_-]+$/ )
-      when :hard_drive
-        `sudo smartctl -i #{@options["device"]}`.each_line do |line|
-          line =~ /^Serial\sNumber:\s+([A-Za-z0-9_-]+)$/
-        end
+        when :computer
+          name = `sudo dmidecode -s system-serial-number`.chomp
+        when :hard_drive
+          `sudo smartctl -i #{@options["device"]}`.each_line do |line|
+            line =~ /^Serial\sNumber:\s+([A-Za-z0-9_-]+)$/
+            name = $1
+          end
       end
 
-      id
+      # Check if the id is valid (all word characters plus dash)
+      if ( id =~ /^[A-Za-z0-9_-]+$/ )
+        name
+      else
+        return
+      end
+    end
+    #
+    # Fetch the ID from the inventory
+    #
+    def fetch_id
+      return unless @name
+
+      p Inventory.request["assets/#{@name}"]
     end
 end

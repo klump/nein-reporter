@@ -68,7 +68,7 @@ class Report
     # 
     def create
       puts "POST /reports"
-      puts self.to_hash
+      puts self.to_json
 
       # Submit the half-finished object via a post request
       Inventory.request['reports'].post self.to_json, :content_type => :json, :accept => :json
@@ -81,7 +81,7 @@ class Report
     #
     def update
       puts "PUT /reports/#{@id}"
-      puts self.to_hash
+      puts self.to_json
 
       # Submit the half-finished object via a post request
       Inventory.request["reports/#{@id}"].put self.to_json, :content_type => :json, :accept => :json
