@@ -52,11 +52,11 @@ class Report
     ({
       report: {
         id: @id,
-        status: @status
+        status: @status,
         starttime: @starttime,
         endtime: @endtime,
         data: @data,
-        asset_id: @asset_id,
+        asset_id: @asset_id
       }
     }).to_json
   end
