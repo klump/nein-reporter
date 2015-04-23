@@ -66,9 +66,6 @@ class Report
     # Create the report in the inventory and set the report ID (assigned by the server)
     # 
     def create
-      puts "POST /reports"
-      puts self.to_json
-
       # Submit the half-finished object via a post request
       response = Inventory.request['reports'].post self.to_json, :content_type => :json, :accept => :json
       report = JSON.parse(response)
@@ -80,9 +77,6 @@ class Report
     # Update the report in the inventory
     #
     def update
-      puts "PUT /reports/#{@id}"
-      puts self.to_json
-
       # Submit the half-finished object via a post request
       response = Inventory.request["reports/#{@id}"].put self.to_json, :content_type => :json, :accept => :json
       report = JSON.parse(response)
