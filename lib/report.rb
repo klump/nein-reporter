@@ -11,12 +11,12 @@ class Report
     @data = {}
     @starttime = Time.now
     @endtime = nil
-    @status = nil
+    @status = :running
 
     # Set the asset ID
     if ( asset_id.nil? )
       # If no asset ID was found, fail the report and add an error message
-      @status = "fail"
+      @status = :failed
       add "report", { "error" => "Could not find a valid ID for the asset" }
     else
       @asset_id = asset_id
@@ -39,7 +39,7 @@ class Report
   # Set endtime and submit all information to the inventory server
   #
   def finalize
-    @status = "pass"
+    @status = :pass
     @endtime = Time.now
 
     update
@@ -52,11 +52,11 @@ class Report
     ({
       report: {
         id: @id,
-        asset_id: @asset_id,
-        data: @data,
+        status: @status
         starttime: @starttime,
         endtime: @endtime,
-        status: @status
+        data: @data,
+        asset_id: @asset_id,
       }
     }).to_json
   end
