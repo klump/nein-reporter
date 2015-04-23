@@ -79,7 +79,7 @@ class Asset
       return unless @name
 
       begin
-        response = Inventory.request["assets/#{@name}"].get
+        response = Inventory.request["assets/#{@name}"].get, :content_type => :json, :accept => :json 
         asset = JSON.parse(response)
         asset["id"]
       rescue RestClient::ResourceNotFound

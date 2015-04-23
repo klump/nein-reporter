@@ -8,7 +8,6 @@ class Report
   # The attributes map to the ones of the report in the inventory
   #
   def initialize asset_id=nil
-    @id = nil
     @data = {}
     @starttime = Time.now
     @endtime = nil
@@ -71,9 +70,10 @@ class Report
       puts self.to_json
 
       # Submit the half-finished object via a post request
-      Inventory.request['reports'].post self.to_json, :content_type => :json, :accept => :json
+      response = Inventory.request['reports'].post self.to_json, :content_type => :json, :accept => :json
+      report = JSON.parse(response)
 
-      @id = (rand*100).floor
+      @id = report["id"]
     end
 
     #
@@ -84,6 +84,7 @@ class Report
       puts self.to_json
 
       # Submit the half-finished object via a post request
-      Inventory.request["reports/#{@id}"].put self.to_json, :content_type => :json, :accept => :json
+      response = Inventory.request["reports/#{@id}"].put self.to_json, :content_type => :json, :accept => :json
+      report = JSON.parse(response)
     end
 end
