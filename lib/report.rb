@@ -13,13 +13,13 @@ class Report
     @endtime = nil
     @status = :running
 
-    add "reporter", { "type" => type }
+    add 'reporter', { type: type }
 
     # Set the asset ID
     if ( asset_id.nil? )
       # If no asset ID was found, fail the report and add an error message
       @status = :failed
-      add "reporter", { "error" => "Could not find a valid ID for the asset" }
+      add 'reporter', { error: 'Could not find a valid ID for the asset' }
     else
       @asset_id = asset_id
     end
@@ -72,7 +72,7 @@ class Report
       response = Inventory.request['reports'].post self.to_json, :content_type => :json, :accept => :json
       report = JSON.parse(response)
 
-      @id = report["id"]
+      @id = report['id']
     end
 
     #

@@ -59,7 +59,7 @@ class Asset
         when :computer
           name = `sudo dmidecode -s system-serial-number`.chomp
         when :hard_drive
-          `sudo smartctl -i #{@options["device"]}`.each_line do |line|
+          `sudo smartctl -i #{@options['device']}`.each_line do |line|
             line =~ /^Serial\sNumber:\s+([A-Za-z0-9_-]+)$/
             name = $1
           end
@@ -81,7 +81,7 @@ class Asset
       begin
         response = Inventory.request["assets/#{@name}"].get :content_type => :json, :accept => :json 
         asset = JSON.parse(response)
-        asset["id"]
+        asset['id']
       rescue RestClient::ResourceNotFound
         nil
       end
