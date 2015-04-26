@@ -24,14 +24,14 @@ class Asset
 
     @name = determine_name
     @id = fetch_id
-    @options=options
+    @options = options
   end
 
   #
   # Run the collectors associated with the asset 
   #
   def inventory
-    @report = Report.new(@id)
+    @report = Report.new(@type, @id)
     if ( @report.asset_id.nil? )
       return nil
     end

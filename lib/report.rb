@@ -7,17 +7,19 @@ class Report
   # Create a new report
   # The attributes map to the ones of the report in the inventory
   #
-  def initialize asset_id=nil
+  def initialize type, asset_id=nil
     @data = {}
     @starttime = Time.now
     @endtime = nil
     @status = :running
 
+    add "reporter", { "type" => type }
+
     # Set the asset ID
     if ( asset_id.nil? )
       # If no asset ID was found, fail the report and add an error message
       @status = :failed
-      add "report", { "error" => "Could not find a valid ID for the asset" }
+      add "reporter", { "error" => "Could not find a valid ID for the asset" }
     else
       @asset_id = asset_id
     end
