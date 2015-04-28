@@ -2,6 +2,10 @@
   "api": "http://localhost/",
   "options": {
     "user": "user",
-    "password": "password"
+    "password": "password",
+    "headers": {
+      "Authorization": "username+token",
+      "X-Nein-API-Version": 1
+    }
   }
 }
