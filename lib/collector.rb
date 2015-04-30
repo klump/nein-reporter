@@ -19,7 +19,9 @@ class Collector
   #
   # Initialize the instance variables needed for one collector 
   #
-  def initialize
+  def initialize options
+    @options = options
+
     @output = nil
     @error = nil
     @exitcode = nil

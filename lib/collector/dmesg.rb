@@ -4,7 +4,7 @@ class Collector::Dmesg < Collector
   # This collector is for the computer asset type
   Asset.add_collector(:computer, 10, self)
 
-  def initialize
+  def initialize options
     super
   end
 

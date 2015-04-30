@@ -1,39 +1,30 @@
 require 'json'
 
 class Report
-  attr_accessor :asset_id, :status
+  attr_accessor :status, :data
 
   #
   # Create a new report
   # The attributes map to the ones of the report in the inventory
   #
-  def initialize type, asset_id=nil
-    @data = {}
+  def initialize asset
+    @asset = asset
     @starttime = Time.now
     @endtime = nil
     @status = :running
 
-    add 'reporter', { type: type }
-
-    # Set the asset ID
-    if ( asset_id.nil? )
-      # If no asset ID was found, fail the report and add an error message
-      @status = :failed
-      add 'reporter', { error: 'Could not find a valid ID for the asset' }
-    else
-      @asset_id = asset_id
-    end
-
-    create
+    @data = { 
+      reporter: { type: type },
+    }
 
     return self
   end
 
   #
-  # Add information to the data field
+  # Add information to the report
   #
-  def add collector, data
-    @data[collector] = data
+  def add more_data
+    @data.merge more_data
   end
 
   #
@@ -43,8 +34,6 @@ class Report
   def finalize
     @status = :pass
     @endtime = Time.now
-
-    update
   end
 
   #
@@ -62,25 +51,24 @@ class Report
       }
     }).to_json
   end
+  
+  #
+  # Create the report in the inventory and set the report ID (assigned by the server)
+  # 
+  def create
+    # Submit the half-finished object via a post request
+    response = Inventory.request['reports'].post self.to_json, :content_type => :json, :accept => :json
+    report = JSON.parse(response)
 
-  private
-    #
-    # Create the report in the inventory and set the report ID (assigned by the server)
-    # 
-    def create
-      # Submit the half-finished object via a post request
-      response = Inventory.request['reports'].post self.to_json, :content_type => :json, :accept => :json
-      report = JSON.parse(response)
+    @id = report['id']
+  end
 
-      @id = report['id']
-    end
-
-    #
-    # Update the report in the inventory
-    #
-    def update
-      # Submit the half-finished object via a post request
-      response = Inventory.request["reports/#{@id}"].put self.to_json, :content_type => :json, :accept => :json
-      report = JSON.parse(response)
-    end
+  #
+  # Update the report in the inventory
+  #
+  def update
+    # Submit the half-finished object via a post request
+    response = Inventory.request["reports/#{@id}"].put self.to_json, :content_type => :json, :accept => :json
+    report = JSON.parse(response)
+  end
 end

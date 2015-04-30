@@ -1,4 +1,9 @@
 class Asset
+  class NoNameError < StandardError; end
+  class TypeRequired < StandardError; end
+
+  attr_reader :report
+
   # Create empty arrays for every asset type
   @@collectors = {
     :computer => {},
@@ -19,33 +24,28 @@ class Asset
     if ( @@collectors.keys.include?(type) )
       @type = type
     else
-      raise TypeError
+      raise TypeRequired
     end
 
     @name = determine_name
     @id = fetch_id
     @options = options
+    @report = {}
+
+    raise NoNameError unless @name
   end
 
   #
   # Run the collectors associated with the asset 
   #
-  def inventory
-    @report = Report.new(@type, @id)
-    if ( @report.asset_id.nil? )
-      return nil
-    end
-
+  def gather_information
     @@collectors[@type].keys.sort.each do |priority|
       @@collectors[@type][priority].each do |collector|
-        c = collector.new
+        c = collector.new options
         c.run
-        @report.add collector::NAME, c.to_hash
+        @report[collector::NAME] = c.to_hash
       end
     end
-
-    # End the report and return the results
-    @report.finalize
   end
 
   private
@@ -69,7 +69,7 @@ class Asset
       if ( name =~ /^[A-Za-z0-9_-]+$/ )
         name
       else
-        return
+        nil
       end
     end
     #
