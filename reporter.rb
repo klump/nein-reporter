@@ -18,11 +18,11 @@ begin
   # gather the data
   asset.gather_information
   report.add asset.report
-  report.status = :sucess
+  report.status = :pass
 rescue Asset::NoNameError
   # if no identifier for the asset can be found the report is useless
   report.add( { reporter: { error: 'No identifier/ name found for asset.' } } )
-  report.status = :failed
+  report.status = :fail
 ensure
   # submit the final report to the database
   report.update
