@@ -24,8 +24,13 @@ class Report
   # Add information to the report
   #
   def add more_data
-    more_data.each do |collector,data|
-      @data[collector].merge data
+    more_data.each do |collector,new_data|
+      case @data[collector]
+      when nil
+        @data[collector] = new_data
+      when Hash
+        @data[collector].merge new_data
+      end
     end
   end
 
