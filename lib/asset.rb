@@ -41,7 +41,7 @@ class Asset
   def gather_information
     @@collectors[@type].keys.sort.each do |priority|
       @@collectors[@type][priority].each do |collector|
-        c = collector.new options
+        c = collector.new @options
         c.run
         @report[collector::NAME] = c.to_hash
       end
