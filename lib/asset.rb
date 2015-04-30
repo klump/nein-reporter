@@ -2,7 +2,7 @@ class Asset
   class NoNameError < StandardError; end
   class TypeRequired < StandardError; end
 
-  attr_reader :report
+  attr_reader :report, :type
 
   # Create empty arrays for every asset type
   @@collectors = {
