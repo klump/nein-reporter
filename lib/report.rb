@@ -80,6 +80,7 @@ class Report
   # Update the report in the inventory
   #
   def update
+    @enddate = Time.now
     begin
       # Submit the half-finished object via a post request
       response = Inventory.request["reports/#{@id}"].put self.to_json, :content_type => :json, :accept => :json
