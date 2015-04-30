@@ -21,7 +21,7 @@ begin
   report.status = :sucess
 rescue Asset::NoNameError
   # if no identifier for the asset can be found the report is useless
-  report.add { reporter: { error: 'No identifier/ name found for asset.' } }
+  report.add( { reporter: { error: 'No identifier/ name found for asset.' } } )
   report.status = :failed
 ensure
   # submit the final report to the database
