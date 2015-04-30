@@ -85,6 +85,7 @@ class Asset
       rescue RestClient::ResourceNotFound
         nil
       rescue => exception
+        puts exception.message
         puts exception.response
         exit 1
       end

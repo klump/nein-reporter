@@ -70,6 +70,7 @@ class Report
 
       @id = report['id']
     rescue => exception
+      puts exception.message
       puts exception.response
       exit 1
     end
@@ -84,6 +85,7 @@ class Report
       response = Inventory.request["reports/#{@id}"].put self.to_json, :content_type => :json, :accept => :json
       report = JSON.parse(response)
     rescue => exception
+      puts exception.message
       puts exception.response
       exit 1
     end
