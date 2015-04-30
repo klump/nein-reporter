@@ -14,7 +14,7 @@ class Report
     @status = :running
 
     @data = { 
-      reporter: { type: type },
+      reporter: { type: asset.type },
     }
 
     return self
@@ -24,7 +24,9 @@ class Report
   # Add information to the report
   #
   def add more_data
-    @data.merge more_data
+    more_data.each do |collector,data|
+      @data[collector].merge data
+    end
   end
 
   #
