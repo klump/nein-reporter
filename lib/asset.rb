@@ -84,6 +84,9 @@ class Asset
         asset['id']
       rescue RestClient::ResourceNotFound
         nil
+      rescue => exception
+        exception.response
+        exit 1
       end
     end
 end

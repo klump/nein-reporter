@@ -63,19 +63,29 @@ class Report
   # Create the report in the inventory and set the report ID (assigned by the server)
   # 
   def create
-    # Submit the half-finished object via a post request
-    response = Inventory.request['reports'].post self.to_json, :content_type => :json, :accept => :json
-    report = JSON.parse(response)
+    begin
+      # Submit the half-finished object via a post request
+      response = Inventory.request['reports'].post self.to_json, :content_type => :json, :accept => :json
+      report = JSON.parse(response)
 
-    @id = report['id']
+      @id = report['id']
+    rescue => exception
+      puts exception.response
+      exit 1
+    end
   end
 
   #
   # Update the report in the inventory
   #
   def update
-    # Submit the half-finished object via a post request
-    response = Inventory.request["reports/#{@id}"].put self.to_json, :content_type => :json, :accept => :json
-    report = JSON.parse(response)
+    begin
+      # Submit the half-finished object via a post request
+      response = Inventory.request["reports/#{@id}"].put self.to_json, :content_type => :json, :accept => :json
+      report = JSON.parse(response)
+    rescue => exception
+      exception.response
+      exit 1
+    end
   end
 end
