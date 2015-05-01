@@ -1,4 +1,5 @@
 require 'json'
+require 'socket'
 
 class Report
   attr_accessor :status, :data
@@ -13,8 +14,17 @@ class Report
     @endtime = nil
     @status = :running
 
+    ipaddress = nil
+    Socket.ip_address_list.each do |ipaddr|
+      ipaddress = ipaddr if ipaddr.ipv4? && !ipaddr.ipv4_lookback?
+      break
+    end
+
     @data = { 
-      reporter: { type: asset.type },
+      reporter: {
+        type: asset.type,
+        ipaddress:  ipaddress,
+      },
     }
 
     return self
