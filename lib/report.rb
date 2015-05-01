@@ -16,7 +16,7 @@ class Report
 
     ipaddress = nil
     Socket.ip_address_list.each do |ipaddr|
-      ipaddress = ipaddr if ipaddr.ipv4? && !ipaddr.ipv4_lookback?
+      ipaddress = ipaddr if ipaddr.ipv4? && !ipaddr.ipv4_loopback?
       break
     end
 
