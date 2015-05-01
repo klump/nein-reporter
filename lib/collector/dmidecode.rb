@@ -9,7 +9,7 @@ class Collector::Dmidecode < Collector
   end
 
   def run
-    command = 'dmidecode'
+    command = 'sudo dmidecode'
 
     super(command)
   end
