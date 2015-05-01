@@ -16,14 +16,16 @@ class Report
 
     ipaddress = nil
     Socket.ip_address_list.each do |ipaddr|
-      ipaddress = ipaddr if ipaddr.ipv4? && !ipaddr.ipv4_loopback?
-      break
+      if ipaddr.ipv4? && !ipaddr.ipv4_loopback?
+        ipaddress = ipaddr
+        break
+      end
     end
 
     @data = { 
       reporter: {
         type: asset.type,
-        ipaddress:  ipaddress,
+        ipaddress: ipaddress,
       },
     }
 
