@@ -1,0 +1,8 @@
+#! /bin/bash
+
+git stash
+git checkout master
+git pull
+git checkout deployment
+git rebase master
+git stash pop
