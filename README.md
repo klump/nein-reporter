@@ -14,3 +14,20 @@ Collectors
 
 The collectors are commands to be run which collect information.
 They are all subclasses of the `Collector` class.
+
+
+Parameters
+----------
+
+The dispatch script has a look at the kernel command line (available for instance in /proc/cmdline).
+It will change its behaviour based on neindb specific parameters.
+These parameters have the following form: `neindb.PARAMETER=VALUE`.
+
+### Available paramters
+
+```
+neindb.asset_type=(computer)	  # Select which asset type you want to check for, right now only computers are supported.
+neindb.interactive=true|false	  # Determines whether the reporter will be interactive or noninteractive. Noninteractive is the default.
+neindb.poweroff=true|false	    # Should the computer be turned off after the reporter finished (successful or unseccessful). The default is to turn the computer off.
+
+```

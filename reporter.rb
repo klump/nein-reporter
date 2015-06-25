@@ -8,22 +8,23 @@ require_relative './lib/collector.rb'
 # Connect to the Inventory API
 Inventory.configure
 
-asset = Asset.new :computer
+# Create an asset with the type specified
+asset = Asset.new ARGV[0].to_sym 
 report = Report.new asset
 
-# tell the inventory we are working on a report
+# Tell the inventory we are working on a report
 report.create
 
 begin
-  # gather the data
+  # Gather the data
   asset.gather_information
   report.add asset.report
   report.status = :success
 rescue Asset::NoNameError
-  # if no identifier for the asset can be found the report is useless
+  # If no identifier for the asset can be found the report is useless
   report.add( { reporter: { error: 'No identifier/ name found for asset.' } } )
   report.status = :failure
 ensure
-  # submit the final report to the database
+  # Submit the final report to the database
   report.update
 end
