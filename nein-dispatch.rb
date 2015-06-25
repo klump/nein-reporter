@@ -11,15 +11,15 @@ end
 
 # Determine which reporter to run
 reporter_script = File.expand_path(File.dirname(__FILE__))
-if settings[interactive] =~ /(yes|true)/i
+if settings['interactive'] =~ /(yes|true)/i
   reporter_script += '/reporter-interactive.rb'
 else
   reporter_script += '/reporter.rb'
 end
 
 # Run the reporter
-system("#{reporter_script} #{settings[asset_type]}")
+system("#{reporter_script} #{settings['asset_type']}")
 
-unless settings[poweroff] =~ /(no|false)/i
+unless settings['poweroff'] =~ /(no|false)/i
   system("poweroff")
 end
